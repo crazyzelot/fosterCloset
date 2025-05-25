@@ -1,0 +1,41 @@
+<div class="min-h-screen bg-gradient-to-br from-pink-50 to-blue-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-lg">
+    <div class="text-center">
+      <div class="flex justify-center mb-6">
+        <%= image_tag "foster_closet_logo.jpg", class: "h-16 w-16 object-contain", alt: "Foster Closet Logo" %>
+      </div>
+      <h1 class="text-4xl font-bold text-gray-900 mb-2">Foster Closet</h1>
+      <p class="text-lg text-gray-600 mb-8">Helping serve people who are serving people</p>
+      
+      <div class="space-y-4">
+        <div class="bg-pink-50 p-4 rounded-lg">
+          <h3 class="text-lg font-semibold text-pink-700 mb-2">Our Mission</h3>
+          <p class="text-gray-600">Supporting foster families by providing essential resources and creating a community of care.</p>
+        </div>
+        
+        <div class="bg-blue-50 p-4 rounded-lg">
+          <h3 class="text-lg font-semibold text-blue-700 mb-2">Join Our Community</h3>
+          <p class="text-gray-600">Connect with other foster families and access the resources you need to make a difference.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-8 space-y-6">
+      <%= button_to "/auth/auth0", class: "w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500", data: { turbo: "false" } do %>
+        <div class="flex items-center">
+          <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd"/>
+          </svg>
+          Sign in with Auth0
+        </div>
+      <% end %>
+    </div>
+
+    <div class="mt-6 text-center text-sm text-gray-500">
+      <p>By signing in, you agree to our</p>
+      <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">Terms of Service</a>
+      <span class="mx-1">and</span>
+      <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">Privacy Policy</a>
+    </div>
+  </div>
+</div> 

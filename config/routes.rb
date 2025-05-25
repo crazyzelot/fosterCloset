@@ -9,6 +9,17 @@ Rails.application.routes.draw do
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
-  # Defines the root path route ("/")
-  # root "posts#index"
+  # Auth routes
+  get '/auth/auth0/callback', to: 'auth#callback'
+  get '/auth/failure', to: 'auth#failure'
+  get '/login', to: 'auth#login'
+  
+  # Dashboard route
+  get '/dashboard', to: 'dashboard#index'
+  
+  # Inventory Items routes
+  resources :inventory_items, only: [:index, :new, :create]
+  
+  # Root route - redirects to login if not authenticated
+  root 'auth#login'
 end

@@ -1,0 +1,22 @@
+<%# Navigation header that appears on all pages except login %>
+<nav class="bg-white shadow-md">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-16">
+      <div class="flex">
+        <%# Logo and brand name %>
+        <div class="flex-shrink-0 flex items-center">
+          <%= link_to root_path, class: "flex items-center space-x-2" do %>
+            <%= image_tag "foster_closet_logo.jpg", class: "h-8 w-8 object-contain", alt: "Foster Closet Logo" %>
+            <span class="text-xl font-bold text-gray-900">Foster Closet</span>
+          <% end %>
+        </div>
+      </div>
+
+      <%# Navigation links %>
+      <div class="flex items-center space-x-4">
+        <%= link_to "Dashboard", dashboard_path, class: "text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200" %>
+        <%= link_to "Inventory Categories", inventory_items_path, class: "text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200" %>
+      </div>
+    </div>
+  </div>
+</nav> 
