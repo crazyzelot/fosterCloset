@@ -16,6 +16,12 @@ class InventoryItemsController < ApplicationController
     end
   end
 
+  def remove
+    @inventory_item = InventoryItem.find(params[:id])
+    @inventory_item.update(status: InventoryItem::STATUS_REMOVED)
+    redirect_to inventory_items_path, notice: 'Item has been removed from inventory.'
+  end
+
   private
 
   def inventory_item_params
