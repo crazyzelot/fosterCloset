@@ -17,6 +17,10 @@ Rails.application.routes.draw do
   # Dashboard route
   get '/dashboard', to: 'dashboard#index'
   
+  # Inventory Management routes
+  get '/inventory-management', to: 'inventory_management#index'
+  post '/inventory-management/update-stock', to: 'inventory_management#update_stock'
+  
   # Inventory Items routes
   resources :inventory_items, only: [:index, :new, :create, :edit, :update] do
     member do

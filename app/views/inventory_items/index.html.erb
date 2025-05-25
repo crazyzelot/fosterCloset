@@ -1,7 +1,16 @@
 <div class="min-h-screen bg-gradient-to-br from-pink-50 to-blue-50 py-12 px-4 sm:px-6 lg:px-8">
   <div class="max-w-7xl mx-auto bg-white p-10 rounded-xl shadow-lg">
     <div class="flex justify-between items-center mb-6">
-      <h1 class="text-3xl font-bold text-gray-900">Inventory Categories</h1>
+      <div class="flex items-center space-x-4">
+        <h1 class="text-3xl font-bold text-gray-900">Inventory Categories</h1>
+        <div class="flex items-center">
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="show-removed" class="sr-only peer">
+            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+            <span class="ml-3 text-sm font-medium text-gray-700">Show Removed Items</span>
+          </label>
+        </div>
+      </div>
       <%= link_to "Add New Category", new_inventory_item_path, class: "bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200" %>
     </div>
 
@@ -18,17 +27,17 @@
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
           <% @inventory_items.each do |item| %>
-            <tr>
+            <tr class="<%= item.removed? ? 'removed-item opacity-50' : '' %>" data-status="<%= item.status %>">
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= item.category %></td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= item.barcode %></td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= item.status %></td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= item.in_stock %></td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                <button class="bg-blue-500 hover:bg-blue-700 text-white px-3 py-1 rounded mr-2">Print Barcode</button>
+                <% unless item.removed? %>
+                  <button class="bg-blue-500 hover:bg-blue-700 text-white px-3 py-1 rounded mr-2">Print Barcode</button>
+                <% end %>
                 <% if item.removed? %>
-                  <%= link_to edit_inventory_item_path(item), class: "bg-yellow-500 hover:bg-yellow-700 text-white px-3 py-1 rounded mr-2" do %>
-                    <i class="fas fa-pencil-alt"></i>
-                  <% end %>
+                  <%= link_to "Return to Circulation", edit_inventory_item_path(item), class: "bg-green-500 hover:bg-green-700 text-white px-3 py-1 rounded mr-2" %>
                 <% else %>
                   <button 
                     data-modal-target="remove-modal-<%= item.id %>"
@@ -36,7 +45,6 @@
                     <i class="fas fa-trash"></i>
                   </button>
                 <% end %>
-                <button class="bg-green-500 hover:bg-green-700 text-white px-3 py-1 rounded">Adjust</button>
 
                 <% unless item.removed? %>
                   <%= render 'shared/confirmation_modal',
@@ -56,4 +64,24 @@
       </table>
     </div>
   </div>
-</div> 
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const showRemovedCheckbox = document.getElementById('show-removed');
+    const removedItems = document.querySelectorAll('[data-status="removed"]');
+
+    function toggleRemovedItems() {
+      removedItems.forEach(item => {
+        item.style.display = showRemovedCheckbox.checked ? 'table-row' : 'none';
+      });
+    }
+
+    // Hide removed items by default
+    showRemovedCheckbox.checked = false;
+    toggleRemovedItems();
+
+    // Toggle visibility when checkbox changes
+    showRemovedCheckbox.addEventListener('change', toggleRemovedItems);
+  });
+</script> 

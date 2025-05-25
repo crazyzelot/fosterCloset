@@ -1,0 +1,180 @@
+<div class="min-h-screen bg-gradient-to-br from-pink-50 to-blue-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-7xl mx-auto bg-white p-10 rounded-xl shadow-lg">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-3xl font-bold text-gray-900">Inventory Management</h1>
+      <div class="flex items-center">
+        <label class="relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" id="mode-toggle" class="sr-only peer">
+          <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+          <span class="ml-3 text-sm font-medium text-gray-700">Remove Items Mode</span>
+        </label>
+      </div>
+    </div>
+
+    <div id="add-items-section" class="space-y-6">
+      <div class="bg-white p-6 rounded-lg border border-gray-200">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Add Items to Stock</h2>
+        <form id="barcode-form" class="space-y-4">
+          <div>
+            <label for="barcode" class="block text-sm font-medium text-gray-700">Scan Barcode</label>
+            <input type="text" 
+                   id="barcode" 
+                   name="barcode" 
+                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                   autofocus
+                   required>
+          </div>
+          <div>
+            <label for="quantity" class="block text-sm font-medium text-gray-700">Quantity</label>
+            <input type="number" 
+                   id="quantity" 
+                   name="quantity" 
+                   value="1"
+                   min="1"
+                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                   required>
+          </div>
+          <button type="submit" 
+                  class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            Add to Stock
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div id="remove-items-section" class="space-y-6 hidden">
+      <div class="bg-white p-6 rounded-lg border border-gray-200">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Remove Items from Stock</h2>
+        <form id="barcode-form-remove" class="space-y-4">
+          <div>
+            <label for="barcode-remove" class="block text-sm font-medium text-gray-700">Scan Barcode</label>
+            <input type="text" 
+                   id="barcode-remove" 
+                   name="barcode" 
+                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                   autofocus
+                   required>
+          </div>
+          <div>
+            <label for="quantity-remove" class="block text-sm font-medium text-gray-700">Quantity</label>
+            <input type="number" 
+                   id="quantity-remove" 
+                   name="quantity" 
+                   value="1"
+                   min="1"
+                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                   required>
+          </div>
+          <button type="submit" 
+                  class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+            Remove from Stock
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div id="response-message" class="mt-4 p-4 rounded-md hidden">
+      <!-- Response messages will be shown here -->
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const modeToggle = document.getElementById('mode-toggle');
+    const addItemsSection = document.getElementById('add-items-section');
+    const removeItemsSection = document.getElementById('remove-items-section');
+    const responseMessage = document.getElementById('response-message');
+
+    function toggleMode() {
+      if (modeToggle.checked) {
+        addItemsSection.classList.add('hidden');
+        removeItemsSection.classList.remove('hidden');
+        document.getElementById('barcode-remove').focus();
+      } else {
+        addItemsSection.classList.remove('hidden');
+        removeItemsSection.classList.add('hidden');
+        document.getElementById('barcode').focus();
+      }
+    }
+
+    function showResponse(success, message) {
+      responseMessage.innerHTML = message.split('\n').map(line => 
+        `<div class="mb-1">${line}</div>`
+      ).join('');
+      
+      responseMessage.className = 'mt-4 p-4 rounded-md';
+      
+      if (success) {
+        responseMessage.classList.add('bg-green-50', 'text-green-800', 'border', 'border-green-200');
+        responseMessage.classList.remove('bg-red-50', 'text-red-800', 'border-red-200');
+      } else {
+        responseMessage.classList.add('bg-red-50', 'text-red-800', 'border', 'border-red-200');
+        responseMessage.classList.remove('bg-green-50', 'text-green-800', 'border-green-200');
+      }
+      
+      responseMessage.classList.remove('hidden');
+      
+      // Hide the message after 8 seconds (increased for multiple results)
+      setTimeout(() => {
+        responseMessage.classList.add('hidden');
+      }, 8000);
+    }
+
+    function handleSubmit(event, isRemoval) {
+      event.preventDefault();
+      const form = event.target;
+      const barcode = form.querySelector('input[name="barcode"]').value;
+      const quantity = form.querySelector('input[name="quantity"]').value;
+
+      fetch('/inventory-management/update-stock', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({
+          barcode: barcode,
+          quantity: quantity,
+          is_removal: isRemoval
+        })
+      })
+      .then(response => response.json().then(data => ({ status: response.status, data })))
+      .then(({ status, data }) => {
+        showResponse(data.success, data.message);
+        if (data.success) {
+          form.reset();
+          form.querySelector('input[name="barcode"]').focus();
+        } else {
+          // If there are errors, keep the barcode in the field but clear the quantity
+          form.querySelector('input[name="quantity"]').value = '1';
+          form.querySelector('input[name="barcode"]').focus();
+        }
+      })
+      .catch(error => {
+        showResponse(false, 'An error occurred while processing your request.');
+      });
+    }
+
+    // Set initial state
+    modeToggle.checked = false;
+    toggleMode();
+
+    // Toggle sections when checkbox changes
+    modeToggle.addEventListener('change', toggleMode);
+
+    // Handle form submissions
+    document.getElementById('barcode-form').addEventListener('submit', (e) => handleSubmit(e, false));
+    document.getElementById('barcode-form-remove').addEventListener('submit', (e) => handleSubmit(e, true));
+
+    // Auto-submit when barcode is scanned (assuming scanner adds a return character)
+    ['barcode', 'barcode-remove'].forEach(id => {
+      document.getElementById(id).addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          this.form.dispatchEvent(new Event('submit'));
+        }
+      });
+    });
+  });
+</script> 
