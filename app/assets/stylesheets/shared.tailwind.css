@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  /* Common container styles */
+  .container {
+    @apply min-h-screen bg-gradient-to-br from-pink-50 to-blue-50 py-12 px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Card styles */
+  .card {
+    @apply max-w-7xl mx-auto bg-white p-10 rounded-xl shadow-lg;
+  }
+
+  /* Button styles */
+  .btn {
+    @apply px-4 py-2 text-base font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-200;
+  }
+
+  .btn-primary {
+    @apply bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-500;
+  }
+
+  .btn-secondary {
+    @apply bg-gray-100 text-gray-700 hover:bg-gray-200 focus:ring-gray-300;
+  }
+
+  /* Modal styles */
+  .modal-overlay {
+    @apply fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full;
+  }
+
+  .modal-container {
+    @apply relative top-20 mx-auto p-5 border w-[32rem] shadow-lg rounded-md bg-white;
+  }
+
+  .modal-content {
+    @apply mt-3 text-center;
+  }
+
+  .modal-title {
+    @apply text-lg leading-6 font-medium text-gray-900;
+  }
+
+  .modal-body {
+    @apply mt-2 px-4 py-3;
+  }
+
+  .modal-text {
+    @apply text-sm text-gray-500 break-words max-w-full;
+  }
+
+  .modal-actions {
+    @apply items-center px-4 py-3 flex justify-center space-x-4;
+  }
+} 

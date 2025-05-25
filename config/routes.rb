@@ -18,7 +18,7 @@ Rails.application.routes.draw do
   get '/dashboard', to: 'dashboard#index'
   
   # Inventory Items routes
-  resources :inventory_items, only: [:index, :new, :create] do
+  resources :inventory_items, only: [:index, :new, :create, :edit, :update] do
     member do
       post :remove
     end
